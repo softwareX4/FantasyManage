@@ -1,0 +1,31 @@
+/*地图的高度*/
+#container {
+    height: 650px;
+}
+/*背景盒子的高度*/
+.content-item {
+    height: 728px;
+}
+/*绘制按钮*/
+.drawButton {
+    position: absolute;
+    bottom: 5px;
+    right: 90px;
+}
+.saveButton {
+    position: absolute;
+    bottom: 5px;
+    right: 50px;
+}
+.returnButton {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+}
+.map{
+    display: none;
+}
+.mapFont{
+    margin: 8px;
+    border: gainsboro 1px solid;
+}

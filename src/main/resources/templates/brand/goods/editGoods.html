@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>壹送后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet"
+          href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="../bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet"
+          href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <link rel="stylesheet" href="../dist/css/style-qiu.css">
+    <link rel="stylesheet" href="../dist/css/brand-qiu.css">
+
+    <style>
+        th {
+            width: 7% !important;
+        }
+
+        .col-sm-12 {
+            padding-right: 1px;
+            padding-left: 1px;
+        }
+    </style>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header('壹送品牌商')"></header>  <!--E: 头部导航-->
+
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S: 左部导航-->
+    <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.phone},'goods','1')">
+
+    </aside>
+    <!--E: 左部导航-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="content-item">
+                <div class="content-tit">
+                    <span class="content-title">商品管理 &gt; 编辑商品</span>
+                </div>
+                <div class="first-agent">
+                    <a href="/manager/brand/goodsShow" class="add font-agent">&lt; 返回</a>
+                </div>
+                <div class="container-div">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <form class="form-horizontal" action="/manager/brand/editGoods" method="post"
+                                  enctype="multipart/form-data" id="editGoodsForm">
+                                <input type="hidden" name="goodsId" th:value="${goods.goodsId}">
+                                <input type="hidden" id="secondCategoryId" th:value="${goods.categoryId}">
+                                <input type="hidden" id="firstId" th:value="${firstCategoryId}">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">分类&单位：</label>
+
+                                        <div class="col-sm-8">
+                                            <div class="col-sm-4" style="padding-left: 0;">
+                                                <select name="firstCategoryId" id="firstCategory"
+                                                        class="form-control font"
+                                                        onchange="addGoodsSelectFirstCategory()">
+                                                    <option th:value="${category.categoryId}"
+                                                            th:each="category:${categories}"
+                                                            th:text="${category.categoryName}">零食
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select name="secondCategoryId" id="secondCategory"
+                                                        class="form-control font">
+                                                    <option value="">零食</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input name="unit" th:value="${goods.unit}" placeholder="请输入单位"
+                                                       class="form-control font"
+                                                       onblur="inputCondition(this,this.value,/[^\a-zA-Z\u4E00-\u9FA5]/g,'只允许输入：字母，汉字，请更改',2)"
+                                                       required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="goodName" class="col-sm-3 control-label">商品名称：</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text" th:value="${goods.goodsName}" name="goodsName"
+                                                   class="form-control" id="goodName" placeholder="请输入商品名称"
+                                                   onblur="inputCondition(this,this.value,/[\s\S]*？/g,'你输入了非法字符，请更改',20)"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+
+                                        <div class="col-sm-8">
+                                            <span class="info wechat-info">多关键词之间用英文逗号隔开</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="keyword" class="col-sm-3 control-label">关键词：</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text" th:value="${goods.keyword}" name="keyword"
+                                                   class="form-control" id="keyword" placeholder="请输入关键词"
+                                                   onblur="inputCondition(this,this.value,/[\s\S]*？/g,'只允许输入：数字，字母，汉字和英文逗号，请更改',45)"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cost" class="col-sm-3 control-label">成本价：</label>
+
+                                        <div class="col-sm-2">
+                                            <input type="number" th:value="${goods.costPrice}" name="costPrice"
+                                                   class="form-control font" id="cost" placeholder="请输入成本价" required
+                                                   min="0.00" step="0.01">
+                                        </div>
+                                        <label for="sale" class="col-sm-1 control-label price-label">销售价：</label>
+
+                                        <div class="col-sm-2">
+                                            <input type="number" name="salePrice" th:value="${goods.salePrice}"
+                                                   class="form-control font" id="sale" placeholder="请输入销售价" required
+                                                   min="0.00" step="0.01">
+                                        </div>
+                                        <label for="market" class="col-sm-1 control-label price-label">市场价：</label>
+
+                                        <div class="col-sm-2">
+                                            <input type="number" name="marketPrice" th:value="${goods.marketPrice}"
+                                                   class="form-control font" id="market" placeholder="请输入市场价" required
+                                                   min="0.00" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="strategy" class="col-sm-3 control-label">库存数量：</label>
+
+                                        <div class="col-sm-2">
+                                            <input type="number" name="stock"
+                                                   th:value="${#numbers.formatInteger(goods.stock,1,'NONE')}"
+                                                   class="form-control font" id="strategy" placeholder="输入库存数量" required
+                                                   min="0">
+                                        </div>
+                                        <label for="warning" class="col-sm-1 control-label price-label">预警数量：</label>
+
+                                        <div class="col-sm-2">
+                                            <input type="number" name="lowStock"
+                                                   th:value="${#numbers.formatInteger(goods.lowStock,1,'NONE')}"
+                                                   class="form-control font" id="warning" placeholder="输入预警数量" required
+                                                   min="0">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description" class="col-sm-3 control-label">商品描述：</label>
+
+                                        <div class="col-sm-8">
+                                            <textarea th:text="${goods.description}" name="description" id="description"
+                                                      cols="88" rows="2">
+                                                这是一个冰红茶
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">商品图片：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="add-img" id="addImg">
+                                                <div class="rect-wechat">
+                                                    <img class="file-img" id="img1" th:src="${goods.picture}">
+                                                    <i class="fa fa-fw  fa-plus addIcon" id="icon1"></i>
+                                                    <input type="file" name="picture" class="up-file"
+                                                           onchange="preview(this, 1)">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- /.box-body -->
+                                <div class="box-footer">
+                                    <button type="submit" class="btn btn-info">保存返回</button>
+                                    <button type="button" class="btn btn-clear pull-right"
+                                            onclick="editGoodsAsNewPuttime()">作为新批次添加
+                                    </button>
+                                </div>
+                                <!-- /.box-footer -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside"></aside>  -->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+            </div>
+            <div class="modal-body">
+                <div id="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script src="../dist/js/brand/addAgent.js"></script>
+<script src="../dist/js/brand/goods.js"></script>
+<script src="../dist/js/validate.js"></script>
+<script>
+    $(function () {
+        var firstCategoryId = $("#firstId").val();
+        $("#firstCategory option[value='" + firstCategoryId + "']").attr("selected", true);
+        $("#firstCategory").trigger("change")
+        var secondCategoryId = $("#categoryId").val();
+        $("#secondCategory option[value='" + secondCategoryId + "']").attr("selected", true)
+    })
+</script>
+<script th:inline="javascript">
+    var msg = null;
+    var error = null;
+</script>
+<script src="../dist/js/brand/editGoods.js"></script>
+</body>
+</html>

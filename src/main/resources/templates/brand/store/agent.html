@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>壹送后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet" href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <link rel="stylesheet" href="../dist/css/style-qiu.css">
+    <link rel="stylesheet" href="../dist/css/brand-qiu.css">
+
+    <style>
+        th {
+            width: 7% !important;
+        }
+
+        .col-sm-12 {
+            padding-right: 1px;
+            padding-left: 1px;
+        }
+    </style>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header('壹送品牌商')">
+    </header>
+    <!--E: 尾部导航-->
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S: 左部导航-->
+    <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.getPhone()},'store','2')">
+
+    </aside>
+    <!--E: 左部导航-->
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="content-item">
+                <div class="content-tit">
+                    <span class="content-title">代理商管理</span>
+                </div>
+                <div class="first-agent">
+                    <a href="/manager/brand/toAddAgent" class="add">新增代理商</a> ｜
+                    <a href="/manager/brand/agentLevelShow" class="add">级别管理</a>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label area areatit font font-agent">代理商名称：</label>
+
+                    <div class="col-sm-3">
+                        <input type="text" name="input_agentName" id="input_agentName" class="form-control font"
+                               placeholder="请输入代理商名称">
+                    </div>
+                    <label class="col-sm-1 control-label area areatit font font-agent">代理商级别：</label>
+
+                    <div class="col-sm-3">
+                        <select name="input_agentLevel" id="input_agentLevel" class="form-control font">
+                            <option value="">--请选择--</option>
+                            <option th:value="${level.agentLevelId}" th:text="${level.agentLevelName}"
+                                    th:each="level,levelState:${levels}"></option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2" style="padding: 0;">
+                        <a class="col-sm-5 btn btn-info font" onclick="searchAgent()">搜索</a>
+                        <a class="col-sm-5 btn btn-clear font" onclick="clearAgentSearch()">清空</a>
+                    </div>
+                </div>
+                <div class="container-div">
+                    <table class="table table-bordered table-hover font table-goods order-table">
+                        <thead style="background: #3E8EB8; color: white;">
+                        <tr>
+                            <th>序号</th>
+                            <th>代理商ID</th>
+                            <th>代理商名称</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>级别</th>
+                            <th>区域</th>
+                            <th>门店数量</th>
+                            <th>状态</th>
+                            <th>累计销售额</th>
+                            <th>成立时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="agentsTable">
+                        <tr th:id="'tr'+${agentDTO.agent.agentId}" th:each="agentDTO,agentState:${agents}">
+                            <td th:text="${agentState.index+1}">1</td>
+                            <td th:text="${agentDTO.agent.agentId}">4004555555</td>
+                            <td th:text="${agentDTO.agent.agentName}">益阳</td>
+                            <td th:text="${agentDTO.agent.contactName}">liulin</td>
+                            <td th:text="${agentDTO.agent.contectPhone}">1362ddhjhhdhdhhhhhhh8655372</td>
+                            <td th:text="${agentDTO.level.agentLevelName}">省级</td>
+                            <td th:text="${agentDTO.agent.area}">湖南</td>
+                            <td th:text="${agentDTO.storeCount}">4</td>
+                            <td th:id="'status'+${agentDTO.agent.agentId}"
+                                th:text="(${agentDTO.agent.status} == ${T(com.sumixer.ys.manager.config.AppConst).AGENT_NORMAL})?'正常':'冻结'">
+                                正常
+                            </td>
+                            <td th:text="${T(com.sumixer.ys.manager.util.StringUtil).moneyFormat(agentDTO.sale)}">
+                                163.00
+                            </td>
+                            <td th:text="${T(com.sumixer.ys.manager.util.DateUtil).formatDate(agentDTO.agent.createTime,'yyyy-MM-dd HH:mm')}">
+                                2018-06-02 22:57
+                            </td>
+                            <td>
+                                <a th:href="'/manager/brand/checkAgent?agentId='+${agentDTO.agent.agentId}"
+                                   class="add add-g">查看</a> |
+                                <a th:id="'editA'+${agentDTO.agent.agentId}"
+                                   th:style="(${agentDTO.agent.status} != ${T(com.sumixer.ys.manager.config.AppConst).AGENT_NORMAL})?'color:gray;':''"
+                                   th:href="(${agentDTO.agent.status} != ${T(com.sumixer.ys.manager.config.AppConst).AGENT_NORMAL})?'#':'/manager/brand/toEditAgent?agentId='+${agentDTO.agent.agentId}"
+                                   class="add add-g">编辑</a> |
+                                <a th:onclick="(${agentDTO.agent.status} == ${T(com.sumixer.ys.manager.config.AppConst).AGENT_NORMAL})?'freezedAgent(\''+${agentDTO.agent.agentId}+'\')':'useAgent(\''+${agentDTO.agent.agentId}+'\')'"
+                                   class="add add-g"
+                                   th:text="(${agentDTO.agent.status} == ${T(com.sumixer.ys.manager.config.AppConst).AGENT_NORMAL})?'冻结':'启用'"
+                                   th:id="'statusA'+${agentDTO.agent.agentId}">冻结</a> |
+                                <a th:onclick="'delAgent(\''+${agentDTO.agent.agentId}+'\')'" class="add add-g">删除</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside">-->    <!--</aside>-->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog  modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="gridSystemModalLabel">提示</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modalConfirmBtn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script src="../dist/js/global-qiu.js"></script>
+<script src="../dist/js/brand/address.js"></script>
+<script src="../dist/js/brand/agent.js"></script>
+<script src="../dist/js/validate.js"></script>
+<script>
+    var msg = "[[${msg}]]";
+    var error = "[[${error}]]";
+    var levels = null;
+</script>
+</body>
+</html>

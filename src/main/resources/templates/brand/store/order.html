@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>壹送后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet"
+          href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="../../bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet"
+          href="../../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet"
+          href="../../bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet"
+          href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="../../dist/css/style-qiu.css">
+    <style>
+        table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc,
+        table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > td.sorting_asc,
+        table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting {
+            padding-right: 21px;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header('壹送品牌商')">
+    </header>  <!--E: 尾部导航-->
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S:左部导航-->
+    <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.phone},'order','1')">
+
+    </aside>
+    <!--E:左部导航-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="content-item">
+                <div class="content-tit">
+                    <span class="content-title">订单管理</span>
+                </div>
+                <div class="container-div" style="padding: 10px 0;">
+                    <div class="col-md-12" style="padding: 0px;">
+                        <div class="col-md-11" style="padding: 0;">
+                            <ul id="myTab" class="nav nav-tabs">
+                                <li class="active">
+                                    <a onclick="brand_orderTypeClick(0,0)" data-toggle="tab">
+                                        所有订单
+                                    </a>
+                                </li>
+                                <li class="nav-good"> |</li>
+                                <li><a onclick="brand_orderTypeClick(2,0)" data-toggle="tab">未付款</a></li>
+                                <li class="nav-good"> |</li>
+                                <li>
+                                    <a onclick="brand_orderTypeClick(0,2)" data-toggle="tab">未发货</a>
+                                </li>
+                                <li class="nav-good"> |</li>
+                                <li>
+                                    <a onclick="brand_orderTypeClick(1,3)" data-toggle="tab">已完成</a>
+                                </li>
+                                <li class="nav-good"> |</li>
+                                <li>
+                                    <a onclick="brand_orderTypeClick(5,0)" data-toggle="tab">未退款</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="exportForm" class="col-md-1 back-wechat" style="margin-top: 18px;"><a
+                                href="/manager/brand/order/exportOrderExcel">导出表格</a></div>
+                    </div>
+                </div>
+                <div class="col-md-12 search">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" style="padding: 10px 0;">订单号：</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control font" id="orderNumberInput" placeholder="请输入单号">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2" style="padding: 0;">
+                        <a class="col-sm-5 btn btn-info font" onclick="brand_orderNumberClick()">搜索</a>
+                        <!--<a class="col-sm-5 btn btn-clear font" onclick="orderNumberRemove()" >清空</a>-->
+                    </div>
+                </div>
+                <div class="col-md-12 search">
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label class="col-sm-2" style="padding: 10px 0;">订单时间：</label>
+                            <div class="col-sm-4">
+                                <div class="input-group date">
+                                    <div class="input-group-addon" style="padding: 8px;">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" class="form-control pull-right datepicker" id="datepicker">
+                                </div>
+                            </div>
+                            <div class="col-sm-1" style="text-align: center;margin-top: 5px;">~</div>
+                            <div class="col-sm-4">
+                                <div class="input-group date">
+                                    <div class="input-group-addon" style="padding: 8px;">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" class="form-control pull-right datepicker" id="datepickerEnd">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2" style="padding: 0;">
+                        <a class="col-sm-5 btn btn-info font" onclick="brand_orderDateClick()">搜索</a>
+                        <!--<a class="col-sm-5 btn btn-clear font">清空</a>-->
+                    </div>
+                </div>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="all">
+                        <table class="table table-bordered table-hover table-goods">
+                            <thead style="background: #3E8EB8; color: white;">
+                            <tr>
+                                <th>序号</th>
+                                <th>门店ID</th>
+                                <th>订单编号</th>
+                                <th>用户名</th>
+                                <th>手机号码</th>
+                                <th>价格</th>
+                                <th>订单时间</th>
+                                <th>支付时间</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="ordersTable">
+                            <tr th:each="order,rowStat: ${allOrders}">
+                                <td th:text="${rowStat.index+1}">1</td>
+                                <td th:text="${order.getYsOrder().getStoreId()}">1</td>
+                                <td th:text="${order.getYsOrder().orderId}">4004555555</td>
+                                <td th:text="${order.getUserDTO().nickname}">liulin</td>
+                                <td th:text="${order.getUserDTO().phone}">13627656784</td>
+                                <td th:text="${order.getYsOrder().price}">75.00</td>
+                                <td th:text="${T(com.sumixer.ys.manager.util.DateUtil).formatDate(order.getYsOrder().createTime)}">
+                                    2018-06-02 22:57
+                                </td>
+                                <td th:text="${order.getYsOrder().payTime}==null?'未支付':${T(com.sumixer.ys.manager.util.DateUtil).formatDate(order.getYsOrder().payTime)}">
+                                    2018-06-02 23:57
+                                </td>
+                                <td th:switch="${order.getYsOrder().payStatus}">
+                                    <span th:case="1">已支付</span>
+                                    <span th:case="2">未支付</span>
+                                    <span th:case="3">取消支付</span>
+                                    <span th:case="5">申请退款</span>
+                                    <span th:case="4">货到付款</span>
+                                    <span th:case="6">已退款</span>
+                                    <span th:case="7">拒绝退款</span>
+                                </td>
+                                <td>
+                                    <a th:href="'/manager/brand/order/details?id='+${order.getYsOrder().getId()}"
+                                       class="add add-g">查看</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside">-->
+    <!--</aside>-->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+            </div>
+            <div class="modal-body">
+                <div id="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery 3 -->
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script src="../../bower_components/moment/min/moment.min.js"></script>
+<script src="../../bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap datepicker -->
+<script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+<script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<script src="../../dist/js/global-qiu.js"></script>
+<script src="../../dist/js/brand/order.js"></script>
+<script src="../../dist/js/validate.js"></script>
+<script>
+    var msg = null;
+    var error = null;
+</script>
+</body>
+</html>

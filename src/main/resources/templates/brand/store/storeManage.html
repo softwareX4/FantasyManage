@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>壹送后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet"
+          href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="../bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet"
+          href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet"
+          href="../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <link rel="stylesheet" href="../dist/css/style-qiu.css">
+    <link rel="stylesheet" href="../dist/css/brand-qiu.css">
+
+    <style>
+        th {
+            width: 7% !important;
+        }
+
+        .col-sm-12 {
+            padding-right: 1px;
+            padding-left: 1px;
+        }
+    </style>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header('壹送品牌商')"></header>  <!--E: 尾部导航-->
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S: 左部导航-->
+    <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.phone},'store','3')">
+
+    </aside>
+    <!--E: 左部导航-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="content-item">
+                <div class="content-tit">
+                    <span class="content-title">门店管理</span>
+                </div>
+                <div class="first-agent">
+                    <a href="/manager/brand/toAddStore" class="add">新增门店</a>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label area areatit font font-agent">门店名称：</label>
+
+                    <div class="col-sm-3">
+                        <input type="text" name="input_storeName" id="input_storeName" class="form-control font"
+                               placeholder="请输入门店名称">
+                    </div>
+                    <!--<label class="col-sm-1 control-label area areatit font font-agent">所在区域：</label>-->
+
+                    <div class="col-sm-5">
+                        <!--<select name="input_store" class="form-control font">
+                          <option value="">&#45;&#45;请选择&#45;&#45;</option>
+                        </select>-->
+                        <label class="col-sm-1 control-label font areatit" style="padding-top: 9px;">省：</label>
+                        <div class="col-sm-3 area" style="padding-top: 0;">
+                            <select name="input_province" id="input_province" class="form-control font">
+                                <option value="">--请选择--</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-1 control-label font areatit" style="padding-top: 9px;">市：</label>
+                        <div class="col-sm-3 area" style="padding-top: 0;">
+                            <select name="input_city" id="input_city" class="form-control font">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-1 control-label font areatit" style="padding-top: 9px;">区：</label>
+                        <div class="col-sm-3 area" style="padding-top: 0;">
+                            <select name="input_area" id="input_area" class="form-control font"
+                                    onchange="selectDistrict()">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2" style="padding: 0;">
+                        <a class="col-sm-5 btn btn-info font" onclick="queryStore()">搜索</a>
+                        <a class="col-sm-5 btn btn-clear font" onclick="clearStoreSearch()">清空</a>
+                    </div>
+                </div>
+                <div class="container-div">
+                    <table class="table table-bordered table-hover font table-goods" id="stm-table">
+                        <thead style="background: #3E8EB8; color: white;">
+                        <tr>
+                            <th>序号</th>
+                            <th>门店ID</th>
+                            <th>门店名称</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>区域</th>
+                            <th>上级代理</th>
+                            <th>状态</th>
+                            <th>累计销售额</th>
+                            <th>成立时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="storesTable">
+
+                        <tr th:each="storeDTO,storeState:${stores}" th:id="'tr'+${storeDTO.store.storeId}">
+                            <td th:text="${storeState.index+1}"></td>
+                            <td th:text="${storeDTO.store.storeId}">4004555555</td>
+                            <td th:text="${storeDTO.store.storeName}">益阳</td>
+                            <td th:text="${storeDTO.store.contactName}">liulin</td>
+                            <td th:text="${storeDTO.store.contactPhone}">13628655372</td>
+                            <td th:text="${storeDTO.store.area}">
+                                益阳
+                            </td>
+                            <td th:text="${storeDTO.agent.agentName}">壹送</td>
+                            <td th:switch="${storeDTO.store.status}"
+                                th:id="'status'+${storeDTO.store.storeId}">
+                                <span th:case="1">正常</span>
+                                <span th:case="2">冻结</span>
+                                <span th:case="4">休假</span>
+                            </td>
+                            <td th:text="${T(com.sumixer.ys.manager.util.StringUtil).moneyFormat(storeDTO.sale)}">
+                                163.00
+                            </td>
+                            <td th:text="${T(com.sumixer.ys.manager.util.DateUtil).formatDate(storeDTO.store.createTime,'yyyy-MM-dd HH:mm')}">
+                                2018-06-02 22:57
+                            </td>
+                            <td>
+                                <a th:href="'/manager/brand/checkStore?storeId='+${storeDTO.store.storeId}"
+                                   class="add add-g">查看</a> |
+                                <a th:id="'editA'+${storeDTO.store.storeId}"
+                                   th:style="(${storeDTO.store.status} != ${T(com.sumixer.ys.manager.config.AppConst).STORE_FREEZED})?'':'color:gray;'"
+                                   th:href="(${storeDTO.store.status} != ${T(com.sumixer.ys.manager.config.AppConst).STORE_FREEZED})?'/manager/brand/toEditStore?storeId='+${storeDTO.store.storeId}:'#'"
+                                   class="add add-g">编辑</a> |
+                                <a th:onclick="(${storeDTO.store.status} == ${T(com.sumixer.ys.manager.config.AppConst).STORE_FREEZED})?'use(this,\''+${storeDTO.store.storeId}+'\')':'freezed(this,\''+${storeDTO.store.storeId}+'\')'"
+                                   class="add add-g"
+                                   th:text="(${storeDTO.store.status} == ${T(com.sumixer.ys.manager.config.AppConst).STORE_FREEZED})?'启用':'冻结'"
+                                   th:id="'statusA'+${storeDTO.store.storeId}">
+                                    启用
+                                </a>
+                                |
+                                <a th:onclick="'delStore(\''+${storeDTO.store.storeId}+'\')'" class="add add-g">删除</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside"></aside>-->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="gridSystemModalLabel">提示</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modalConfirmBtn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script src="../dist/js/global-qiu.js"></script>
+<script src="../dist/js/brand/address.js"></script>
+<script src="../dist/js/brand/index.js"></script>
+<script src="../dist/js/validate.js"></script>
+<script src="../dist/js/brand/storeManage.js"></script>
+<script th:inline="javascript">
+    var msg = [[${msg}]];
+    var error = [[${error}]];
+</script>
+
+</body>
+</html>

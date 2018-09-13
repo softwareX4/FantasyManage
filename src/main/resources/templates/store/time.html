@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>壹送后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet"
+          href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="../bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet"
+          href="../bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet"
+          href="../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="../plugins/timepicker/bootstrap-timepicker.min.css">
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="../dist/css/style-qiu.css">
+    <link rel="stylesheet" href="../dist/css/bootstrap-dialog.css">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header(${session.loginStore.storeName})">
+
+    </header>
+    <!--E: 尾部导航-->
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S:左部导航-->
+    <aside th:replace="store/common/template_sidebar::sidebar(${session.loginStore.contactName},${session.loginStore.contactPhone},'store','2')">
+
+    </aside>
+    <!--E:左部导航-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="content-item">
+                <div class="content-tit">
+                    <span class="content-title">营业时间</span>
+                    <span th:text="${result}"></span>
+                </div>
+                <div class="container-div" style="padding: 10px 0;">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <form class="form-horizontal" action="/manager/opentime/update" id="timeForm" method="post">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">工作日：</label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check">
+                                                <label th:each="day,dayState: ${session.loginStore.openDay.toCharArray()}">
+                                                    <input type="checkbox" th:checked="${day}=='1'" class="minimal-red"
+                                                           th:value="1" th:name="'days'+${dayState.index}">
+                                                    <!--+' days[]'-->
+                                                    <span th:text="${days[dayState.index]}"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">运营时间：</label>
+
+                                        <div class="col-sm-4">
+                                            <div class="bootstrap-timepicker">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control"
+                                                           th:value="${openStart}" name="startTime" id="timepicker"
+                                                           readonly>
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-clock-o"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1" style="text-align: center;margin-top: 5px;">~</div>
+                                        <div class="col-sm-4">
+                                            <div class="bootstrap-timepicker">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control"
+                                                           th:value="${openEnd}" name="endTime" id="timepickerEnd"
+                                                           readonly>
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-clock-o"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">节假日：</label>
+
+                                        <div class="col-sm-10">
+                                            <div class="form-info">
+                                                <!-- <a href="#" class="add">新增</a> -->
+                                                <span class="info wechat-info">注意：最多选择10个节假日时间段。</span>
+                                                <div class="col-sm-1 addP0">
+                                                    <i class="fa fa-fw fa-plus-circle operation-icon initAdd" id="add0"
+                                                       onclick="addNewItem(1)">
+                                                    </i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" id="info">
+                                        <div class="form-group" th:id="'form'+${timeState.index+1}"
+                                             th:each="time,timeState:${closeTimes}">
+
+                                            <label class="col-sm-1"></label>
+
+                                            <div class="col-sm-1 addP"><i
+                                                    class="fa fa-fw  fa-plus-circle operation-icon"
+                                                    th:id="'add'+${timeState.index+1}"
+                                                    th:onclick="'addNewItem('+${timeState.index+2}+')'"
+                                                    th:style="(${timeState.index}!=${closeTimes.size()-1} or ${timeState.index}==9) ?'display:none;':' '"></i>
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                                <div class="input-group date">
+                                                    <div class="input-group-addon" style="padding: 8px;">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </div>
+                                                    <input type="text" class="form-control pull-right datepicker"
+                                                           th:id="'datepicker'+${timeState.index+1}" th:value="${time.beginDate}"
+                                                           th:name="'startDate:'+${timeState.index}"
+                                                           th:onchange="'beginConditionByI(this,'+${timeState.index+1}+')'"
+                                                           required readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="bootstrap-timepicker">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control timepicker"
+                                                               th:id="'timepicker'+${timeState.index+1}"
+                                                               th:value="${time.beginTime}"
+                                                               th:name="'startTime:'+${timeState.index}" required readonly>
+
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-clock-o"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1" style="text-align: center;margin-top: 5px;">~</div>
+                                            <div class="col-sm-2">
+                                                <div class="input-group date">
+                                                    <div class="input-group-addon" style="padding: 8px;">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </div>
+                                                    <input type="text" class="form-control pull-right datepicker"
+                                                           th:id="'datepicker'+${timeState.index+1}+'End'" th:value="${time.endDate}"
+                                                           th:name="'endDate:'+${timeState.index}"
+                                                           th:onchange="'endConditionByI(this,'+${timeState.index+1}+')'"
+                                                           required readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="bootstrap-timepicker">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control timepicker"
+                                                               th:id="'timepicker'+${timeState.index+1}+'End'"
+                                                               th:value="${time.endTime}"
+                                                               th:name="'endTime:'+${timeState.index}" required readonly>
+
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-clock-o"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 addP"><i
+                                                    class="fa fa-fw fa-times-circle operation-del-icon"
+                                                    th:id="'del'+${timeState.index+1}"
+                                                    th:onclick="'delItem('+${timeState.index+1}+')'"></i></div>
+                                            <label class="col-sm-1"></label>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="box-footer">
+                                    <button type="submit" class="btn btn-info pull-right">保存修改</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside">-->    <!--</aside>-->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+            </div>
+            <div class="modal-body">
+                <div id="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+
+<script src="../bower_components/moment/min/moment.min.js"></script>
+<script src="../bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap datepicker -->
+<script src="../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="../plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<script>
+    var msg = "[[${msg}]]";
+    var error = "[[${result}]]"
+</script>
+<script src="../dist/js/store/time.js"></script>
+<script src="../dist/js/validate.js"></script>
+</body>
+</html>

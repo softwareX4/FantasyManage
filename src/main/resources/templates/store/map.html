@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+
+        <section class="content map col-md-11" th:fragment="map(error,msg)">
+            <div class="content-item">
+                <div class="content-tit">
+                    <span class="content-title">门店管理 &gt; 门店信息 &gt; 地图标记</span>
+                    <span th:text="${error}"></span>
+                    <span th:text="${msg}" style="color: red"></span>
+                </div>
+
+                <div class="container-div" style="position: relative">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <div id="container" class="col-md-12" style="position: relative;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <input type="button" class="button drawButton" value="鼠标绘制面" id="polygon"/>
+                        <input type="button" class="button saveButton" value="保存"/>
+                        <input type="button" class="button returnButton" onclick="window.location.href = '/manager/store/info/show';" value="返回"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+</html>

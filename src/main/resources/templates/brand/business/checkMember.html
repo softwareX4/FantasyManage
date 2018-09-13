@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>壹送后台管理系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <!-- bootstrap datepicker -->
+  <link rel="stylesheet" href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+  <!-- Bootstrap time Picker -->
+  <link rel="stylesheet" href="../../plugins/timepicker/bootstrap-timepicker.min.css">  <!-- DataTables -->
+  <link rel="stylesheet" href="../../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"> 
+
+  <link rel="stylesheet" href="dist/css/style-qiu.css">
+  <link rel="stylesheet" href="dist/css/brand-qiu.css">
+
+  <style>
+    th{
+      width: 7% !important;
+    }
+    .col-sm-12{
+      padding-right: 1px;
+      padding-left: 1px;
+    }
+  </style>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <!--S: 头部导航-->  <header th:replace="common/template_header::header('壹送品牌商')">  </header>  <!--E: 头部导航-->
+  <!-- Left side column. contains the logo and sidebar -->
+  <!--S: 左部导航-->
+  <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.phone},'business','1')">
+
+  </aside>
+  <!--E: 左部导航-->
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content">
+      <div class="content-item">
+        <div class="content-tit">
+          <span class="content-title">会员管理 &gt; 查看会员</span>
+        </div>
+        <div class="first-agent">
+          <a href="member.html" class="add font-agent">&lt; 返回</a>
+        </div>
+        <div class="container-div">
+          <div class="col-md-12">
+            <div class="box box-info">
+              <form class="form-horizontal">
+                <div class="box-body">
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">会员头像：</label>
+
+                    <div class="col-sm-8">
+                      <div class="rect-wechat">
+                        <img class="file-img" src="../../../dist/img/avatar04.png">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">会员名称：</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" value="邱邱" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">会员ID：</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" value="2736546787" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">微信名称：</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" value="萌萌哒的邱邱邱邱" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">微信号：</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" value="13746787627" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">手机号码：</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" value="13656787652" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">会员级别：</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" value="高级" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">会员状态：</label>
+
+                    <div class="col-sm-2">
+                      <input type="text" class="form-control" value="正常" readonly>
+                    </div>
+                    <label class="col-sm-1 control-label price-label">会员积分：</label>
+
+                    <div class="col-sm-2">
+                      <input type="text" class="form-control" value="230" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">账户余额：</label>
+
+                    <div class="col-sm-2">
+                      <input type="text" class="form-control" value="201.0" readonly>
+                    </div>
+                    <label class="col-sm-1 control-label price-label">累计消费：</label>
+
+                    <div class="col-sm-2">
+                      <input type="text" class="form-control" value="39298.00" readonly>
+                    </div>
+                    <label class="col-sm-1 control-label price-label">累计购次：</label>
+
+                    <div class="col-sm-2">
+                      <input type="text" class="form-control" value="39" readonly>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="first-agent">收货地址：</div>
+          <div class="table-container">
+            <table class="table table-bordered table-hover font table-goods">
+              <thead style="background: #3E8EB8; color: white;">
+              <tr>
+                <th>序号</th>
+                <th>收货人</th>
+                <th>联系电话</th>
+                <th>收货地址</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>1</td>
+                <td>liulin</td>
+                <td>13627547653</td>
+                <td>湖南省长沙市天心区中南大学铁道学院</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="first-agent">订单：</div>
+          <div class="table-container">
+            <table class="table table-bordered table-hover font table-goods">
+              <thead style="background: #3E8EB8; color: white;">
+              <tr>
+                <th>序号</th>
+                <th>订单编号</th>
+                <th>用户名</th>
+                <th>手机号码</th>
+                <th>价格</th>
+                <th>订单时间</th>
+                <th>支付时间</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>1</td>
+                <td>4004555555</td>
+                <td>王五</td>
+                <td>13627547653</td>
+                <td>230.10</td>
+                <td>2018-06-02 22:57</td>
+                <td>2018-07-02 22:57</td>
+                <td>已付款</td>
+                <td>
+                  <a href="#" class="add add-g">打印</a> |
+                  <a href="#" class="add add-g">查看</a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!--S: 右边的小框-->
+  <!--<aside th:replace="common/template_aside::aside">-->    <!--</aside>-->
+  <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../../bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<script src="../../dist/js/global-qiu.js"></script>
+</body>
+</html>

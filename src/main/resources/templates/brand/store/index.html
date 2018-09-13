@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>壹送后台管理系统</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+<!-- Ionicons -->
+<link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+<link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+<!-- bootstrap wysihtml5 - text editor -->
+<link rel="stylesheet" href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+
+<!-- Google Font -->
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<link rel="stylesheet" href="../dist/css/style-qiu.css">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header('壹送品牌商')">
+    </header>
+    <!--E: 尾部导航-->
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S: 左部导航-->
+    <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.phone},'store','1')">
+
+    </aside>
+    <!--E: 左部导航-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="content-item">
+                <div class="content-tit">
+                    <span class="content-title">实时概况</span>
+                    <span class="time">
+                        更新时间：
+                        <span id="updateTime"
+                              th:text="${updateTime}">____-__-__ __:__:__</span></span>
+                </div>
+
+                <div class="first-agent">
+                </div>
+                <div class="col-sm-12 select">
+                    <div class="form-group col-sm-12">
+                        <h5 class="col-sm-1 control-label areatit">省份：</h5>
+                        <div class="col-sm-2 area">
+                            <select name="input_province" id="input_province" class="form-control font" onchange="selectStore()">
+                                <option value="">--请选择--</option>
+                                <option value="all">所有门店</option>
+                            </select>
+                        </div>
+                        <h5 class="col-sm-1 control-label areatit">市：</h5>
+                        <div class="col-sm-2 area">
+                            <select name="input_city" id="input_city" class="form-control font" onchange="selectStore()">
+                                <option value=""></option>
+
+                            </select>
+                        </div>
+                        <h5 class="col-sm-1 control-label areatit">区：</h5>
+                        <div class="col-sm-2 area">
+                            <select name="input_area" id="input_area" class="form-control font"
+                                    onchange="selectDistrict()">
+                                <option value=""></option>
+
+                            </select>
+                        </div>
+                        <h5 class="col-sm-1 control-label areatit">门店：</h5>
+                        <div class="col-sm-2 area">
+                            <select name="input_store" class="form-control font" id="stores" onchange="selectStore()">
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="container-div">
+                    <div class="container-item">
+                        <div class="rect rect-con">
+                            <span class="info-box-icon bg-aqua rect-i rect-c1"><i
+                                    class="fa fa-fw fa-home rectI"></i></span>
+                        </div>
+                        <div class="item-con">
+                            <div class="item-title">门店销售额（元）</div>
+                            <div class="price" id="storeSale">----</div>
+                            <div class="yes-price">昨日：<span id="yesterdayStoreSale">----</span></div>
+                        </div>
+                        <div class="item-con">
+                            <div class="item-title">门店支付订单数</div>
+                            <div class="price" id="orderCount">--</div>
+                            <div class="yes-price">昨日：<span id="yesterdayOrderCount">--</span></div>
+                        </div>
+                    </div>
+                    <div class="container-item">
+                        <div class="rect rect-con">
+                            <span class="info-box-icon bg-aqua rect-i rect-c2"><i
+                                    class="fa fa-fw  fa-internet-explorer rectI"></i></span>
+                        </div>
+                        <div class="item-con">
+                            <div class="item-title">门店利润额（元）</div>
+                            <div class="price" id="storeProfit">----</div>
+                            <div class="yes-price">昨日：<span id="yesterdayStoreProfit">----</span></div>
+                        </div>
+                        <div class="item-con">
+                            <div class="item-title">门店毛利率</div>
+                            <div class="price" id="storeRate">--%</div>
+                            <div class="yes-price">昨日：<span id="yesterdayStoreRate">--%</span></div>
+                        </div>
+                    </div>
+                    <div class="container-item">
+                        <div class="rect rect-con">
+                            <span class="info-box-icon bg-aqua rect-i rect-c3"><i
+                                    class="fa fa-fw fa-users rectI"></i></span>
+                        </div>
+                        <div class="item-con">
+                            <div class="item-title">新增客户数</div>
+                            <div class="price" id="newCustomerCount">--</div>
+                            <div class="yes-price">昨日：<span id="yesterdayNewCustomerCount">--</span></div>
+                        </div>
+                        <div class="item-con">
+                            <div class="item-title">支付客户数</div>
+                            <div class="price" id="payCustomerCount">--</div>
+                            <div class="yes-price">昨日：<span id="yesterdayPayCustomerCount">--</span></div>
+                        </div>
+                    </div>
+                    <div class="container-item">
+                        <div class="rect rect-con">
+                            <span class="info-box-icon bg-aqua rect-i rect-c4"><i
+                                    class="fa fa-fw fa-user-plus rectI"></i></span>
+                        </div>
+                        <div class="item-con">
+                            <div class="item-title">充值会员数</div>
+                            <div class="price" id="rechargeCount">--</div>
+                            <div class="yes-price">昨日：<span id="yesterdayRechargeCount">--</span></div>
+                        </div>
+                        <div class="item-con">
+                            <div class="item-title">新增储值金额（元）</div>
+                            <div class="price" id="newRecharge">----</div>
+                            <div class="yes-price">昨日：<span id="yesterdayNewRecharge">----</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-item content-info">
+                <div class="content-tit">
+                    <span class="content-title">重要提醒</span>
+                </div>
+                <div class="container-div">
+                    <div class="container-item container-info">
+                        <!-- <div class="rect-con"></div> -->
+                        <div class="item-con">
+                            <div class="rect-title">门店数量</div>
+                        </div>
+                    </div>
+                    <div class="container-item container-info">
+                        <!-- <div class="rect-con"></div> -->
+                        <div class="item-con">
+                            <div class="rect-title">商品相关</div>
+                        </div>
+                    </div>
+                    <!-- <div class="rect-title">订单相关</div> -->
+                    <div class="container-item container-info">
+                        <!-- <div class="rect-con"></div> -->
+                        <div class="item-con">
+                            <span class="item-title">正常营业：</span>
+                            <span class="order" th:text="${onBusinessStoreCount}">3</span>
+                        </div>
+                        <div class="item-con">
+                            <span class="item-title">休假停业：</span>
+                            <span class="order" th:text="${stopBusinessStoreCount}">0</span>
+                        </div>
+                    </div>
+                    <div class="container-item container-info">
+                        <!-- <div class="rect-con"></div> -->
+                        <div class="item-con item-brand">
+                            <span class="item-title">门店在售：</span>
+                            <span class="order" th:text="${saleGoodsCount}">123333</span>
+                        </div>
+                        <div class="item-con item-brand">
+                            <span class="item-title">门店售罄：</span>
+                            <span class="order" th:text="${storeAlarmCount}">299</span>
+                        </div>
+                        <div class="item-con item-brand">
+                            <span class="item-title">库存预警：</span>
+                            <span class="order" th:text="${goodsAlarmCount}">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside"></aside>  -->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script src="../dist/js/brand/address.js"></script>
+<script src="../dist/js/brand/index.js"></script>
+</body>
+</html>

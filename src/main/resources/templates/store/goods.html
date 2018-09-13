@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>壹送后台管理系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+  <!-- jvectormap -->
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link rel="stylesheet" href="../dist/css/style-qiu.css">
+  <style>
+    table.dataTable thead>tr>th.sorting_asc, table.dataTable thead>tr>th.sorting_desc,
+    table.dataTable thead>tr>th.sorting, table.dataTable thead>tr>td.sorting_asc,
+    table.dataTable thead>tr>td.sorting_desc, table.dataTable thead>tr>td.sorting{
+      padding-right: 21px;
+    }
+  </style>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <!--S: 头部导航-->
+  <header th:replace="common/template_header::header(${session.loginStore.storeName})">
+  </header>
+  <!--E: 尾部导航-->
+  <!-- Left side column. contains the logo and sidebar -->
+  <!--S:左部导航-->
+  <aside th:replace="store/common/template_sidebar::sidebar(${session.loginStore.contactName},${session.loginStore.contactPhone},'goods','1')">
+
+  </aside>
+  <!--E:左部导航-->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content">
+      <div class="content-item">
+        <div class="content-tit">
+          <span class="content-title">商品管理</span>
+        </div>
+        <div class="container-div">
+          <div class="col-md-12">
+            <div class="col-md-8" style="padding: 0;">
+              <ul id="myTab" class="nav nav-tabs">
+                <li class="active publish">
+                  <a href="#all"  data-toggle="tab">
+                    所有商品库
+                  </a>
+                </li>
+                <li class="nav-good"> | </li>
+                <li class="publish" ><a href="#all"data-toggle="tab">已上架</a></li>
+                <li class="nav-good"> | </li>
+                <li class="publish" >
+                  <a href="#all" data-toggle="tab">已下架</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="col-sm-3 control-label font" style="padding-top: 9px !important;">关键字：</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control font" id="selectStr" name="" placeholder="请输入关键字" >
+                </div>
+                <div class="col-sm-2">
+                  <a class="btn btn-info font"  onclick="selectGoods()" >搜索</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 category-div">
+            <div class="first" id="firstCategory">
+              <div class="category firstCategory category-active" data="0">所有</div>
+
+              <div class="category firstCategory" th:each="cato:${category}" th:text="${cato.categoryName}" th:data="${cato.categoryId}">零食</div>
+            </div>
+            <div class="first second" id="secondCategory">
+              <div class="category category-second subcategory-active" data="0">所有</div>
+              <!--<div class="category category-second "></div>-->
+            </div>
+          </div>
+          <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="all">
+              <table id="goodsall" class="table table-bordered table-hover table-goods">
+                <thead style="background: #3E8EB8; color: white;">
+                <tr>
+                  <th>
+                    <!--<input type="checkbox">全选-->
+                  </th>
+                  <th>序号</th>
+                  <th>商品ID</th>
+                  <th>商品名称</th>
+                  <th>一级分类</th>
+                  <th>二级分类</th>
+                  <th>单位</th>
+                  <th>价格</th>
+                  <th>状态</th>
+                  <th>库存数量</th>
+                  <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="dataTable">
+                  <tr th:each="item,rowStat: ${itemList}">
+                    <td>
+                      <input type="checkbox" name="select">
+                    </td>
+                    <td th:text="${rowStat.index+1}">1</td>
+                    <td th:text="${item.getYsGoods().goodsId}">4004555555</td>
+                    <td th:text="${item.getYsGoods().goodsName}">康师傅红烧牛肉面（桶装）</td>
+                    <td th:text="${item.firstCategory}">零食</td>
+                    <td th:text="${item.secondCategory}">方便速食</td>
+                    <td th:text="${item.getYsGoods().unit}">个</td>
+                    <td th:text="${item.getYsGoods().salePrice}">4.50</td>
+                    <td th:text="${item.publish}">已上架</td>
+                    <td th:text="${item.ysStoreGoods.stock}">40</td>
+                    <td>
+                      <a class="add add-g editStock">修改库存</a> |
+                      <a href="#" class="add add-g operation" th:text="${item.getYsStoreGoods().getPublish()}==1?'下架':'上架'">上架</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <a href="#" class="btn btn-info" id="up" style="margin-right: 17px;" onclick="opera(1)">上架</a>
+            <a href="#" class="btn btn-clear" id="down" onclick="opera(2)">下架</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!--S: 右边的小框-->
+  <!--<aside th:replace="common/template_aside::aside">-->
+  <!--</aside>-->
+  <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<!-- myJavascript -->
+<!--<script src="../dist/js/global-qiu.js"></script>-->
+<script src="../dist/js/store/goods.js"></script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>壹送后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="plugins/timepicker/bootstrap-timepicker.min.css">
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="dist/css/style-qiu.css">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header(${session.loginStore.storeName})">
+    </header>
+    <!--E: 尾部导航-->
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S:左部导航-->
+    <aside th:replace="store/common/template_sidebar::sidebar(${session.loginStore.contactName},${session.loginStore.contactPhone},'store','1')">
+
+    </aside>
+    <!--E:左部导航-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content" th:switch="${session.loginStore.status}">
+            <div th:case="1" >
+                <div class="content-item">
+                    <div class="content-tit">
+                        <span class="content-title">实时概况</span>
+                        <span class="time" th:text="'更新时间:'+${T(com.sumixer.ys.manager.util.DateUtil).formatDate(session.nowOrderInfo.nowDate)}">更新时间：2018-06-09 11:16:26</span>
+                    </div>
+                    <div class="container-div">
+                        <div class="container-item">
+                            <div class="rect rect-con">
+                                <span class="info-box-icon bg-aqua rect-i rect-c1"><i class="fa fa-fw fa-home rectI"></i></span>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">门店销售额（元）</div>
+                                <div class="price" th:text="${session.nowOrderInfo.saleMoney}">1598.00</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.saleMoney}">昨日：1790.00</div>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">门店支付订单数</div>
+                                <div class="price" th:text="${session.nowOrderInfo.payOrder}">26</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.payOrder}">昨日：51</div>
+                            </div>
+                        </div>
+                        <div class="container-item">
+                            <div class="rect rect-con">
+                                <span class="info-box-icon bg-aqua rect-i rect-c2"><i class="fa fa-fw  fa-internet-explorer rectI"></i></span>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">门店利润额（元）</div>
+                                <div class="price" th:text="${session.nowOrderInfo.saleProfit}">1023.00</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.saleProfit}">昨日：1230.00</div>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">门店毛利率</div>
+                                <div class="price" th:text="${session.nowOrderInfo.saleRatio} + '%'">25%</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.saleRatio} + '%'">昨日：31%</div>
+                            </div>
+                        </div>
+                        <div class="container-item">
+                            <div class="rect rect-con">
+                                <span class="info-box-icon bg-aqua rect-i rect-c3"><i class="fa fa-fw fa-users rectI"></i></span>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">新增客户数</div>
+                                <div class="price" th:text="${session.nowOrderInfo.newOrder}">23</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.newOrder}">昨日：18</div>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">支付客户数</div>
+                                <div class="price" th:text="${session.nowOrderInfo.payOrder}">20</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.payOrder}">昨日：12</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-item content-info">
+                    <div class="content-tit">
+                        <span class="content-title">重要提醒</span>
+                    </div>
+                    <div class="container-div">
+                        <div class="container-item container-info">
+                            <!--<div class="rect-con"></div>-->
+                            <div class="item-con">
+                                <div class="rect-title">订单相关</div>
+                            </div>
+                        </div>
+                        <div class="container-item">
+                        </div>
+                        <!-- <div class="rect-title">订单相关</div> -->
+                        <div class="container-item container-info">
+                            <!--<div class="rect-con"></div>-->
+                            <div class="item-con">
+                                <span class="item-title">待发货订单：</span>
+                                <span class="order" th:text="${session.waitSend}">3</span>
+                            </div>
+                            <div class="item-con">
+                                <span class="item-title">待处理退款：</span>
+                                <span class="order" th:text="${session.waitMoney}">0</span>
+                            </div>
+                        </div>
+                        <div class="container-item">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:case="2">
+                <div class="content-item">
+                    <label>请完善门店信息并告知品牌商激活</label>
+                </div>
+                <div class="content-item content-info">
+                    <div class="content-tit">
+                        <span class="content-title">重要提醒</span>
+                    </div>
+                    <div class="container-div">
+                        <div class="item-con">
+                            <div class="rect-title">您已被冻结！</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:case="*">
+                <div class="content-item">
+                    <div class="content-tit">
+                        <span class="content-title">实时概况</span>
+                        <span class="time" th:text="'更新时间:'+${T(com.sumixer.ys.manager.util.DateUtil).formatDate(session.nowOrderInfo.nowDate)}">更新时间：2018-06-09 11:16:26</span>
+                    </div>
+                    <div class="container-div">
+                        <div class="container-item">
+                            <div class="rect rect-con">
+                                <span class="info-box-icon bg-aqua rect-i rect-c1"><i class="fa fa-fw fa-home rectI"></i></span>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">门店销售额（元）</div>
+                                <div class="price" th:text="${session.nowOrderInfo.saleMoney}">1598.00</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.saleMoney}">昨日：1790.00</div>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">门店支付订单数</div>
+                                <div class="price" th:text="${session.nowOrderInfo.payOrder}">26</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.payOrder}">昨日：51</div>
+                            </div>
+                        </div>
+                        <div class="container-item">
+                            <div class="rect rect-con">
+                                <span class="info-box-icon bg-aqua rect-i rect-c2"><i class="fa fa-fw  fa-internet-explorer rectI"></i></span>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">门店利润额（元）</div>
+                                <div class="price" th:text="${session.nowOrderInfo.saleProfit}">1023.00</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.saleProfit}">昨日：1230.00</div>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">门店毛利率</div>
+                                <div class="price" th:text="${session.nowOrderInfo.saleRatio} + '%'">25%</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.saleRatio} + '%'">昨日：31%</div>
+                            </div>
+                        </div>
+                        <div class="container-item">
+                            <div class="rect rect-con">
+                                <span class="info-box-icon bg-aqua rect-i rect-c3"><i class="fa fa-fw fa-users rectI"></i></span>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">新增客户数</div>
+                                <div class="price" th:text="${session.nowOrderInfo.newOrder}">23</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.newOrder}">昨日：18</div>
+                            </div>
+                            <div class="item-con">
+                                <div class="item-title">支付客户数</div>
+                                <div class="price" th:text="${session.nowOrderInfo.payOrder}">20</div>
+                                <div class="yes-price" th:text="'昨日： ' + ${session.yesDaySaleInfo.payOrder}">昨日：12</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-item content-info">
+                    <div class="content-tit">
+                        <span class="content-title">重要提醒</span>
+                    </div>
+                    <div class="container-div">
+                        <div class="container-item container-info">
+                            <!--<div class="rect-con"></div>-->
+                            <div class="item-con">
+                                <div class="rect-title">订单相关</div>
+                            </div>
+                        </div>
+                        <div class="container-item">
+                        </div>
+                        <!-- <div class="rect-title">订单相关</div> -->
+                        <div class="container-item container-info">
+                            <!--<div class="rect-con"></div>-->
+                            <div class="item-con">
+                                <span class="item-title">待发货订单：</span>
+                                <span class="order" th:text="${session.waitSend}">3</span>
+                            </div>
+                            <div class="item-con">
+                                <span class="item-title">待处理退款：</span>
+                                <span class="order" th:text="${session.waitMoney}">0</span>
+                            </div>
+                        </div>
+                        <div class="container-item">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside">-->    <!--</aside>-->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- daterangepicker -->
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- datepicker -->
+<script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- Slimscroll -->
+<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+</body>
+</html>

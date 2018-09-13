@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>壹送后台管理系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+  <link rel="stylesheet" href="../dist/css/style-qiu.css">
+  <link rel="stylesheet" href="../dist/css/brand-qiu.css">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <!--S: 头部导航-->
+  <header th:replace="common/template_header::header('壹送品牌商')">
+
+  </header>
+  <!--E: 尾部导航-->
+  <!-- Left side column. contains the logo and sidebar -->
+  <!--S: 左部导航-->
+  <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.phone},'business','2')">
+
+  </aside>
+  <!--E: 左部导航-->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content">
+      <div class="content-item"  style="display: none">
+        <div class="content-tit">
+          <span class="content-title">营销策略</span>
+        </div>
+        <div class="first-agent">
+          <a href="/manager/brand/addStrategyShow" class="add">添加策略</a>
+        </div>
+        <div class="container-div">
+          <table class="table table-bordered table-hover font table-goods">
+            <thead style="background: #3E8EB8; color: white;">
+            <tr>
+              <th>序号</th>
+              <th>策略名称</th>
+              <th>生效日期</th>
+              <th>失效日期</th>
+              <th>状态</th>
+              <th>适用范围</th>
+              <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="strategy:${strategyList}">
+              <td th:text="${strategy.getId()}">1</td>
+              <td th:text="${strategy.getStrategyName()}">购物满100减5元</td>
+              <td th:text="${T(com.sumixer.ys.manager.util.DateUtil).formatDate(strategy.getBeginTime(),'yyyy-MM-dd HH:mm')}">2018-06-02 22:57</td>
+              <td th:text="${T(com.sumixer.ys.manager.util.DateUtil).formatDate(strategy.getEndTime(),'yyyy-MM-dd HH:mm')}">2018-08-02 22:57</td>
+              <td th:text="${strategy.getStrategyDesc()}">正常</td>
+              <td th:text="${strategy.getUserLevelId() == 1}?'全部会员':'高级会员'">全部会员</td>
+              <td>
+                <a th:href="'/manager/brand/checkStrategy?strategyId='+${strategy.getId()}" class="add add-g">查看</a> |
+                <a href="''" class="add add-g">编辑</a> |
+                <a href="#" class="add add-g">冻结</a> |
+                <a href="#" class="add add-g">删除</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="content-item">
+          <label>营销策略模块</label>
+        </div>
+        <div class="content-item content-info">
+          <div class="content-tit">
+            <span class="content-title">营销策略模块</span>
+          </div>
+          <div class="container-div">
+            <div class="item-con">
+              <div class="rect-title">待开发</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!--S: 右边的小框-->
+  <!--<aside th:replace="common/template_aside::aside">-->    <!--</aside>-->
+  <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script src="../dist/js/global-qiu.js"></script>
+<script src="../dist/js/brand/strategy.js"></script>
+</body>
+</html>

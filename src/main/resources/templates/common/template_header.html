@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--S: 头部导航-->
+<header class="main-header" th:fragment="header(name)">
+    <!-- Logo -->
+    <a href="#" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini"> <img width="40px" src="http://cdn.yisongbld.com/manager/dist/img/credit/logo.png" alt="壹送"></span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg" style="font-size: 16px;">
+            <img width="40px" src="http://cdn.yisongbld.com/manager/dist/img/credit/logo.png" alt="壹送">
+            壹送后台管理系统
+        </span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="#" class="dropdown-toggle">
+                    <span class="hidden-xs" th:text="${name}">壹送品牌商</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/manager/logout" class="dropdown-toggle">
+                        <span class="hidden-xs">退出登录</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<!--E: 头导航-->
+</html>

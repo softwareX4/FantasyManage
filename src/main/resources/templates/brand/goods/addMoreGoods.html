@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>壹送后台管理系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"> 
+
+  <link rel="stylesheet" href="../dist/css/style-qiu.css">
+  <link rel="stylesheet" href="../dist/css/brand-qiu.css">
+
+  <style>
+    th{
+      width: 7% !important;
+    }
+    .col-sm-12{
+      padding-right: 1px;
+      padding-left: 1px;
+    }
+  </style>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+ <!--S: 头部导航-->  <header th:replace="common/template_header::header('壹送品牌商')">  </header>  <!--E: 头部导航-->
+
+  <!-- Left side column. contains the logo and sidebar -->
+  <!--S: 左部导航-->
+  <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.phone},'goods','1')">
+
+  </aside>
+  <!--E: 左部导航-->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content">
+      <div class="content-item">
+        <div class="content-tit">
+          <span class="content-title">商品管理 &gt; 添加商品</span>
+            <span th:text="${error}"></span>
+        </div>
+        <div class="first-agent">
+          <a href="/manager/brand/goodsShow" class="add font-agent">&lt; 返回</a>
+        </div>
+        <div class="container-div">
+          <div class="col-md-12">
+            <div class="box box-info">
+              <div><img src="../dist/img/excel.jpg"></div>
+              <a href="/manager/brand/addMoreGoodsExcelDownload">下载模板</a>
+              <form action="/manager/brand/addMoreGoodsExcelUpload" method="post" enctype="multipart/form-data">
+                <span>上传文件</span>
+                <input type="file" name="file" required>
+                <input type="submit" value="上传">
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!--S: 右边的小框-->
+  <!--<aside th:replace="common/template_aside::aside">  </aside>  -->
+  <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">×</span></button>
+        <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+      </div>
+      <div class="modal-body">
+        <div th:text="${error}"></div>
+        <div id="modal-text"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script src="../dist/js/brand/addAgent.js"></script>
+<script src="../dist/js/brand/goods.js"></script>
+<script src="../dist/js/validate.js"></script>
+<script>
+    $(function () {
+        $("#firstCategory").trigger("change")
+    })
+</script>
+<script th:inline="javascript">
+  var msg = [[${error}]];
+  var error = null;
+</script>
+
+</body>
+</html>

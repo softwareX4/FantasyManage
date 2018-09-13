@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--S: 左部导航-->
+<aside class="main-sidebar" th:fragment="sidebar(phone,feature,index)">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="http://cdn.yisongbld.com/manager/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p>管理员</p>
+                <a href="#" th:text="${phone}">13627656787</a>
+                <!-- <a href="#"><i class="fa fa-circle text-success"></i> 13627656787</a> -->
+            </div>
+        </div>
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu" data-widget="tree">
+            <!-- <li class="header">MAIN NAVIGATION</li> -->
+            <li th:class="${feature=='store'}?'active treeview':'treeview'">
+                <a href="#">
+                    <i class="fa fa-fw fa-home"></i> <span>门店管理</span>
+                    <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:class="${feature=='store' && index=='1'}?'active':''"><a href="/manager/brand/index"><i class="fa fa-circle-o"></i> 门店概况</a></li>
+                    <li th:class="${feature=='store' && index=='2'}?'active':''"><a href="/manager/brand/agentShow"><i class="fa fa-circle-o"></i> 代理商管理</a></li>
+                    <li th:class="${feature=='store' && index=='3'}?'active':''"><a href="/manager/brand/storeShow"><i class="fa fa-circle-o"></i> 门店管理</a></li>
+                </ul>
+            </li>
+            <li th:class="${feature=='goods'}?'active treeview':'treeview'">
+                <a href="#">
+                    <i class="fa fa-fw fa-tag"></i>
+                    <span>商品管理</span>
+                    <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:class="${feature=='goods' && index=='1'}?'active':''"><a href="/manager/brand/goodsShow"><i class="fa fa-circle-o"></i> 商品管理</a></li>
+                    <li th:class="${feature=='goods' && index=='2'}?'active':''"><a href="/manager/brand/categoryShow"><i class="fa fa-circle-o"></i> 分类管理</a></li>
+                    <li th:class="${feature=='goods' && index=='3'}?'active':''"><a href="/manager/brand/priceShow"><i class="fa fa-circle-o"></i> 折扣管理</a></li>
+
+                </ul>
+            </li>
+            <li th:class="${feature=='business'}?'active treeview':'treeview'">
+                <a href="#">
+                    <i class="fa fa-fw fa-coffee"></i>
+                    <span>运营管理</span>
+                    <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:class="${feature=='business' && index=='1'}?'active':''"><a href="/manager/brand/memberShow"><i class="fa fa-circle-o"></i> 会员管理</a></li>
+                    <li th:class="${feature=='business' && index=='2'}?'active':''"><a href="/manager/brand/strategyShow"><i class="fa fa-circle-o"></i> 营销策略</a></li>
+                </ul>
+            </li>
+            <li th:class="${feature=='order'}?'active treeview':'treeview'">
+                <a href="#">
+                    <i class="fa fa-fw fa-reorder"></i>
+                    <span>订单管理</span>
+                    <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:class="${feature=='order'&&index=='1'}?'active':''"><a href="/manager/brand/order/show"><i class="fa fa-circle-o"></i> 订单管理</a></li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>
+<!--E: 左部导航-->
+
+</html>

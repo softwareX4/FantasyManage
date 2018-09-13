@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>壹送后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet"
+          href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="../bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet"
+          href="../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="../dist/css/style-qiu.css">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header(${session.loginStore.storeName})"></header>  <!--E: 尾部导航-->
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S:左部导航-->
+    <aside th:replace="store/common/template_sidebar::sidebar(${session.loginStore.contactName},${session.loginStore.contactPhone},'store','3')">
+
+    </aside>
+    <!--E:左部导航-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="content-item">
+                <div class="content-tit">
+                    <span class="content-title">微信界面</span>
+                    <span th:text="${error}"></span>
+                    <span th:text="${msg}"></span>
+                </div>
+                <div class="container-div">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <form class="form-horizontal" id="wechatForm" action="/manager/wechat/update" method="post"
+                                  enctype="multipart/form-data">
+                                <div class="box-body">
+                                    <!-- <div class="col-md-6"> -->
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label label-wechat">轮播图：</label>
+
+                                        <div class="col-sm-9">
+                                            <span class="info wechat-info">图片规格360*150像素，点击图片框上传或修改图片。</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+
+                                        <div class="col-sm-9">
+                                            <div class="add-img" id="addImg">
+                                                <div class="rect-wechat" th:each="slide,slideState:${slides}">
+                                                    <input type="hidden" th:name="'imgState:'+${slideState.index}"
+                                                           th:value="${slide.slideUrl}">
+                                                    <img class="file-img" th:id="'img'+${slideState.index}"
+                                                         th:src="${slide.slideUrl}">
+                                                    <i th:class="${slide.id}==null?'fa fa-fw  fa-plus addIcon':''"
+                                                       th:id="'icon'+${slideState.index}"></i>
+                                                    <input type="file" class="up-file"
+                                                           th:onchange="'preview(this,'+${slideState.index}+')'"
+                                                           name="slideImg">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label label-wechat">公告通知：</label>
+
+                                        <div class="col-sm-2">
+                                            <span class="info wechat-info">最多添加4条，每条最多45个字。</span>
+                                        </div>
+                                        <div class="col-sm-1 addP">
+                                            <i class="fa fa-fw  fa-plus-circle operation-icon" id="add0"
+                                               onclick="addNewItem(1)">
+                                            </i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label label-wechat"></label>
+
+                                        <div class="col-sm-9" id="info">
+                                            <div class="form-group" th:id="'form'+${noticeState.index+1}"
+                                                 th:each="notice,noticeState:${notices}">
+                                                <div class="col-sm-1 addP"><i
+                                                        th:style="(${noticeState.index}!=${notices.size()-1} or ${noticeState.index}==3) ?'display:none;':' '"
+                                                        class="fa fa-fw  fa-plus-circle operation-icon"
+                                                        th:id="'add'+${noticeState.index+1}"
+                                                        th:onclick="'addNewItem('+${noticeState.index+2}+')'"></i>
+                                                </div>
+
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" placeholder="公告通知"
+                                                           th:value="${notice.content}"
+                                                           th:name="'notice:'+${noticeState.index}" name="announcement"
+                                                           onblur="inputCondition(this,this.value,/[^\a-zA-Z\u4E00-\u9FA5\d,，.。！!?？'“”、()（）—_]/g,'你输入了非法字符，请更改',45)"
+                                                           required>
+                                                </div>
+
+                                                <div class="col-sm-1 addP"><i
+                                                        class="fa fa-fw fa-times-circle operation-del-icon"
+                                                        th:id="'del'+${noticeState.index+1}"
+                                                        th:onclick="'delItem('+${noticeState.index+1}+')'"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label label-wechat"></label>
+                                        <div class="col-sm-9">
+                                            <div class="tab" id="tab">
+                                                <div class="tab-item" th:id="'item'+${menuState.index+1}"
+                                                     th:each="menu,menuState:${menus}"
+                                                     th:attr="goodsid=${menu.goodsId}, menuId=${menu.menuId}">
+                                                    <span onclick="show()" th:text="${menu.menuName}">热搜推荐</span>
+                                                    <i class="fa fa-fw  fa-remove removeI" style="display: none;"
+                                                       onclick="remove()"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">首页商品栏标题：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="col-sm-8" style="padding-left: 0px;">
+                                                <input type="text" class="form-control" name="title" id="title"
+                                                       onkeydown="validateKey()" placeholder="商品栏标题，最长20个字"
+                                                       onblur="inputCondition(this,this.value,/[^\a-zA-Z\u4E00-\u9FA5\d,，.。！!]/g,'只允许输入：数字，字母，汉字，请更改',20)">
+                                            </div>
+                                            <a class="btn btn-info" data-toggle="modal" id="add">添加商品</a>
+                                            <a class="btn btn-info" onclick="addItem()">保存条目</a>
+                                            <!-- <span class="info">最多添加5件商品</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"></label>
+
+                                        <div class="col-sm-9" style="padding: 0;">
+                                            <div class="result" id="result">
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- /.box-body -->
+                                <div class="box-footer" style="text-align: center;">
+                                    <input type="submit" class="btn btn-info" style="margin-right: 17px;" value="保存修改">
+                                </div>
+                                <!-- /.box-footer -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside"></aside>  -->
+    <!--E: 右边的小框-->
+
+    <div class="modal" id="modal-default">
+        <div class="wrapper">
+            <!--S: 头部导航-->
+            <header th:replace="common/template_header::header(${session.loginStore.storeName})">
+            </header>
+            <!--E: 尾部导航-->
+            <!-- Left side column. contains the logo and sidebar -->
+            <!--S:左部导航-->
+            <aside th:replace="store/common/template_sidebar::sidebar(${session.loginStore.contactName},${session.loginStore.contactPhone},'store','3')">
+
+            </aside>
+            <!--E:左部导航-->
+
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                <section class="content">
+                    <div class="content-item">
+                        <div class="content-tit">
+                            <span class="content-title">商品管理 &gt; 添加商品</span>
+                            <span th:text="${error}"></span>
+                        </div>
+                        <div class="container-div">
+                            <div class="col-md-12">
+                                <div class="col-md-6 back-wechat" onclick="back()"><span>&lt; 返回</span></div>
+                                <div class="col-md-6">
+                                    <div class="form-group font">
+                                        <label class="col-sm-3 control-label"
+                                               style="padding-top: 9px !important;">关键字：</label>
+
+                                        <div class="col-sm-7 font">
+                                            <input type="text" class="form-control font" name="keyword" id="keyword"
+                                                   placeholder="请输入关键字">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <a class="btn btn-info font" onclick="selectBykeyword()">搜索</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 category-div">
+                                <div class="first" id="firstCategory">
+                                    <div class="category firstCategory category-active" categoryId="0" data="0">所有</div>
+                                    <div class="category firstCategory" th:each="category:${categories}"
+                                         th:text="${category.categoryName}" th:data="${category.categoryId}">
+                                    </div>
+                                </div>
+                                <div class="first second" id="secondCategory">
+                                    <div class="category category-second subcategory-active" data="0">所有</div>
+
+                                </div>
+                            </div>
+                            <div id="myTabContent" class="tab-content">
+                                <table id="goodsall" class="table table-bordered table-hover table-goods">
+                                    <thead style="background: #3E8EB8; color: white;">
+                                    <tr>
+                                        <th></th>
+                                        <th>序号</th>
+                                        <th>商品ID</th>
+                                        <th>商品名称</th>
+                                        <th>一级分类</th>
+                                        <th>二级分类</th>
+                                        <th>单位</th>
+                                        <th>价格</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="addGoodsList">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="addGoods" class="btn btn-info" style="margin-right: 17px;">添加商品</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!--S: 右边的小框-->
+            <!--<aside th:replace="common/template_aside::aside">-->
+
+            <!--</aside>-->
+            <!--E: 右边的小框-->
+        </div>
+    </div>
+</div>
+<!-- ./wrapper -->
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script th:inline="javascript">
+    var msg = [[${msg}]];
+    var error = [[${error}]];
+</script>
+<script src="../dist/js/store/wechat.js"></script>
+<!--<script src="../dist/js/global-qiu.js"></script>-->
+<script src="../dist/js/validate.js"></script>
+</body>
+</html>

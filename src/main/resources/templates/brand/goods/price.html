@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>壹送后台管理系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+  <link rel="stylesheet" href="../dist/css/style-qiu.css">
+  <link rel="stylesheet" href="../dist/css/brand-qiu.css">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+ <!--S: 头部导航-->
+    <header th:replace="common/template_header::header('壹送品牌商')">
+    </header>
+    <!--E: 头部导航-->
+
+  <!-- Left side column. contains the logo and sidebar -->
+    <!--S: 左部导航-->
+    <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.phone},'goods','3')">
+
+    </aside>
+    <!--E: 左部导航-->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content">
+      <div class="content-item">
+        <div class="content-tit">
+          <span class="content-title">价格管理</span>
+        </div>
+        <div class="col-md-12 container-div">
+          <div class="col-md-6" style="padding: 0;">
+            <div class="first-agent goods">
+              <a href="/manager/brand/addDiscountShow" class="add">添加商品折扣</a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="col-sm-3 control-label font" style="padding-top: 9px !important;text-align: right">关键字：</label>
+
+              <div class="col-sm-7">
+                <input type="text" class="form-control font" name="keyword" id="keyword" placeholder="请输入关键字" >
+              </div>
+              <div class="col-sm-2">
+                <a class="btn btn-info font" onclick="selectPrice()">搜索</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 category-div">
+          <div class="first" id="firstCategory">
+            <div class="category firstCategory category-active" categoryId="0" data="0">所有</div>
+              <div class="category firstCategory" th:each="category:${categories}" th:text="${category.categoryName}" th:data="${category.categoryId}"  >
+                  <!--th:onclick="'selectFirstCategory('+${category.categoryId}+')'"-->
+              </div>
+          </div>
+          <div class="first second" id="secondCategory">
+            <div class="category category-second subcategory-active" data="0">所有</div>
+            <!--<div class="category category-second subcategory-active">零食</div>-->
+          </div>
+        </div>
+        <div class="container-div">
+          <table class="table table-bordered table-hover font table-goods" id="stm-table">
+            <thead style="background: #3E8EB8; color: white;">
+            <tr>
+              <th>序号</th>
+              <th>商品ID</th>
+              <th>商品名称</th>
+              <th>单位</th>
+              <th>价格</th>
+              <th>数量</th>
+              <th>状态</th>
+              <th>入库批次</th>
+              <th>折扣</th>
+              <th>折后价</th>
+              <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="dataTable">
+            <tr th:each="discount,rowStat:${discounts}" th:id="'tr'+${discount.goods.goods.goodsId}">
+                <td th:text="${rowStat.index+1}">1</td>
+                <td th:text="${discount.goods.goods.goodsId}">567890376</td>
+                <td th:text="${discount.goods.goods.goodsName}">康师傅红烧牛肉面（桶装）</td>
+                <td th:text="${discount.goods.goods.unit}">个</td>
+                <td th:text="${discount.goods.goods.salePrice}">4.50</td>
+                <td th:text="${#numbers.formatInteger(discount.goods.goods.stock,1,'NONE')}">100</td>
+                <td th:text="(${discount.goods.goods.publish} == ${T(com.sumixer.ys.manager.config.AppConst).PUBLISHED})?'已上架':'未上架'">已上架</td>
+                <td th:text="${discount.goods.goods.putTime}">201806010945</td>
+                <td th:text="${(discount.discount != null)?discount.discount.discount:'1'}">0.50</td>
+                <td th:text="${#numbers.formatDecimal(((discount.discount != null)?discount.discount.discount:1)*discount.goods.goods.salePrice,0,2)}">2.25</td>
+                <td th:if="${discount.discount != null}">
+                    <a th:href="'/manager/brand/editDiscountShow?discountId='+${discount.discount.getDiscountId()}" class="add add-g">编辑</a> |
+                    <a th:onclick="'delPrice(\''+${discount.discount.discountId}+'\',\''+${discount.goods.goods.goodsId}+'\')'" class="add add-g">删除</a>
+                </td>
+                <td th:unless="${discount.discount != null}">
+                    <a th:href="'/manager/brand/addSpecialDiscountShow?goodsId='+${discount.goods.goods.goodsId}" class="add add-g">添加折扣</a>
+                </td>
+            </tr>
+            </tbody>
+          </table>
+          <!--<a href="#" class="btn btn-clear category-active">删除</a>-->
+        </div>
+      </div>
+    </section>
+  </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside">-->    <!--</aside>-->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog  modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="gridSystemModalLabel">提示</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modalConfirmBtn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script src="../dist/js/global-qiu.js"></script>
+<script src="../dist/js/brand/price.js"></script>
+<script src="../dist/js/validate.js"></script>
+<script th:inline="javascript">
+    var msg = [[${msg}]];
+    var error = [[${error}]];
+</script>
+</body>
+</html>

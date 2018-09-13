@@ -1,0 +1,3 @@
+$(function () {
+   initTable($('.table-goods'));
+});

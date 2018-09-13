@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>壹送后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet" href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <link rel="stylesheet" href="../dist/css/style-qiu.css">
+    <link rel="stylesheet" href="../dist/css/brand-qiu.css">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header('壹送品牌商')"></header>  <!--E: 头部导航-->
+
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S: 左部导航-->
+    <aside th:replace="brand/common/template_sidebar::sidebar(${session.loginAdmin.getPhone()},'goods','2')">
+
+    </aside>
+    <!--E: 左部导航-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="content-item">
+                <div class="content-tit">
+                    <span class="content-title">分类管理</span>
+                </div>
+                <div class="first-agent">
+                    <a href="/manager/brand/toAddGoodsCategory" class="/manager/brand/toAddGoodsCategory">添加分类</a>
+                </div>
+                <div class="form-group">
+                    <label for="input_keyword" class="col-sm-1 control-label area areatit font font-agent"
+                           style="text-align: right;padding: 10px 0">关键字：</label>
+
+                    <div class="col-sm-3">
+                        <input type="text" name="" id="input_keyword" class="form-control font" placeholder="请输入关键字">
+                    </div>
+                    <div class="col-sm-2" style="padding: 0;">
+                        <a class="col-sm-5 btn btn-info font" onclick="searchCategory()">搜索</a>
+                        <a class="col-sm-5 btn btn-clear font" onclick="clearSearchCategory()">清空</a>
+                    </div>
+                </div>
+                <div class="container-div">
+                    <table class="table table-bordered table-hover font table-goods" id="stm-table">
+                        <thead style="background: #3E8EB8; color: white;">
+                        <tr>
+                            <th>序号</th>
+                            <th>分类名称</th>
+                            <th>分类ID</th>
+                            <th>分类级别</th>
+                            <th>分类描述</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="categoriesTable table-goods">
+                        <tr th:each="category,categoryState:${categories}" th:id="'tr'+${category.categoryId}">
+                            <td th:text="${categoryState.index+1}">1</td>
+                            <td th:text="${category.categoryName}">零食</td>
+                            <td th:text="${category.categoryId}">567890376</td>
+                            <td th:text="${category.rank}">一级分类</td>
+                            <td th:text="${category.description}!=null? ${category.description}:''">这是一个一级分类</td>
+                            <td>
+                                <a th:href="(${category.parentId} != ${T(com.sumixer.ys.manager.config.AppConst).ROOTCATEGORY})?'#':('/manager/brand/toAddChildGoodsCategory?goodsCategoryId='+${category.categoryId})"
+                                   class="add add-g"
+                                   th:style="(${category.parentId} != ${T(com.sumixer.ys.manager.config.AppConst).ROOTCATEGORY})?'color:gray;':''">添加子分类</a>
+                                |
+                                <a th:href="'/manager/brand/toEditGoodsCategory?goodsCategoryId='+${category.categoryId}"
+                                   class="add add-g">编辑</a> |
+                                <a th:onclick="'delCategory(\''+${category.categoryId}+'\')'" class="add add-g">删除</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside">-->    <!--</aside>-->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog  modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="gridSystemModalLabel">提示</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modalConfirmBtn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- jQuery 3 -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Slimscroll -->
+<script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="../dist/js/global-qiu.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script src="../dist/js/brand/goods.js"></script>
+<script th:inline="javascript">
+    var msg = [[${msg}]];
+    var error = [[${error}]];
+</script>
+<script src="../dist/js/validate.js"></script>
+<script src="../dist/js/brand/category.js"></script>
+</body>
+</html>

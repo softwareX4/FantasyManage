@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>壹送后台管理系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet"
+          href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="../../bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet"
+          href="../../bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet"
+          href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="../../plugins/timepicker/bootstrap-timepicker.min.css">
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="../../dist/css/style-qiu.css">
+    <!--map-->
+    <link rel="stylesheet" href="https://cache.amap.com/lbs/static/main1119.css"/>
+    <link rel="stylesheet" href="../../dist/css/map.css"/>
+    <link rel="stylesheet" href="../../dist/css/scrollbar.css"/>
+    <link rel="stylesheet" href="../../dist/css/bootstrap-dialog.css">
+
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!--S: 头部导航-->
+    <header th:replace="common/template_header::header(${session.loginStore.storeName})">
+    </header>
+    <!--E: 尾部导航-->
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--S:左部导航-->
+    <aside th:replace="store/common/template_sidebar::sidebar(${session.loginStore.contactName},${session.loginStore.contactPhone},'store','5')">
+
+    </aside>
+    <!--E:左部导航-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content main col-md-11">
+            <div class="content-item">
+                <!--scrollable-->
+                <div class="content-tit">
+                    <span class="content-title">门店管理 &gt; 门店信息</span>
+                    <span th:text="${error}"></span>
+                    <span th:text="${msg}" style="color: #0b58a2"></span>
+                </div>
+                <!--<div class="first-agent">-->
+                <!--<a href="storeManage.html" class="add font-agent">&lt; 返回</a>-->
+                <!--</div>-->
+                <div class="container-div main">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <form class="form-horizontal" action="/manager/store/info/updateStore" method="post"
+                                  enctype="multipart/form-data" id="storeInfoForm">
+                                <input type="hidden" name="storeId" th:value="${session.loginStore.storeId}">
+                                <div class="box-body">
+
+                                    <div class="form-group">
+                                        <label for="storeName" class="col-sm-3 control-label">门店名称：</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text" name="storeName" class="form-control" id="storeName"
+                                                   th:value="${session.loginStore.storeName}" placeholder="请输入门店名称"
+                                                   onblur="inputCondition(this,this.value,/[\s\S]*？/g,'你输入了非法字符，请更改',20)"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contact" class="col-sm-3 control-label">联系人：</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text" name="contactName" class="form-control" id="contact"
+                                                   th:value="${session.loginStore.contactName}" placeholder="请输入联系人"
+                                                   onblur="inputCondition(this,this.value,/[^\a-zA-Z\u4E00-\u9FA5]/g,'只允许输入：字母，汉字，请更改',10)"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone" class="col-sm-3 control-label">手机号码：</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text" name="contactPhone" class="form-control" id="phone"
+                                                   th:value="${session.loginStore.contactPhone}" placeholder="请输入手机号码"
+                                                   onblur="inputCondition(this,this.value,/^1[34578]\d{9}$/,'手机号码格式有误，请更改',100)"
+                                                   readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password" class="col-sm-3 control-label">登录密码：</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="password" name="password" class="form-control" id="password"
+                                                   th:value="${session.loginAdmin.password}" placeholder="请输入登录密码"
+                                                   onblur="inputCondition(this,this.value,/[^\a-zA-Z\d]/g,'只允许输入：数字，字母，请更改',10)"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">有效期：</label>
+
+                                        <div class="col-sm-3">
+                                            <div class="input-group date">
+                                                <div class="input-group-addon" style="padding: 8px;">
+                                                    <i class="fa fa-calendar"></i>
+                                                </div>
+                                                <input type="text" name="beginTime"
+                                                       class="form-control pull-right datepicker" id="datepicker"
+                                                       th:value="${T(com.sumixer.ys.manager.util.DateUtil).formatDate(session.loginStore.beginTime,'yyyy-MM-dd')}"
+                                                       readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1" style="text-align: center;margin-top: 5px;">~</div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group date">
+                                                <div class="input-group-addon" style="padding: 8px;">
+                                                    <i class="fa fa-calendar"></i>
+                                                </div>
+                                                <input type="text" name="endTime"
+                                                       class="form-control pull-right datepicker" id="datepickerEnd"
+                                                       th:value="${T(com.sumixer.ys.manager.util.DateUtil).formatDate(session.loginStore.endTime,'yyyy-MM-dd')}"
+                                                       readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="address" class="col-sm-3 control-label">门店地址：</label>
+
+                                        <div class="col-sm-8">
+                                            <textarea name="address" id="address" cols="88" rows="2"
+                                                      th:text="${session.loginStore.address}"
+                                                      onblur="inputCondition(this,this.value,/[^\a-zA-Z\u4E00-\u9FA5\d:：,，（）()]/g,'地址包含非法字符，请更改',1024)"
+                                                      required>湖南省长沙市岳麓区</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <!--这里要求调>用地图API完成地图的操作-->
+                                        <label class="col-sm-3 control-label">配送范围：</label>
+
+                                        <div class="col-sm-8">
+                                            <!--<textarea cols="88" rows="2" th:text="'经纬度：'+${storeDTO.getPaths()}" readonly placeholder="请点击地图标记指示配送范围"> </textarea>-->
+                                            <a onclick="showMap()" class="button btn btn-info">使用地图添加配送范围</a>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group" id="range">
+                                        <label class="col-sm-3 control-label">经纬度：</label>
+                                        <div class="col-sm-8">
+                                            <div class="col-sm-12" th:each="triangle:${storeDTO.getPaths()}"
+                                                 th:id="${triangle.pathId}">
+                                                <textarea class="col-sm-10 mapFont"
+                                                          th:text="'('+${triangle.point1}+') ('+${triangle.point2}+') '+
+                                                       '('+${triangle.point3}+') ('+${triangle.point4}+') ('+${triangle.point5}+') '+
+                                                       '('+${triangle.point6}+') ('+${triangle.point7}+') ('+${triangle.point8}+')'"
+                                                          readonly></textarea>
+                                                <div class="col-sm-1 addP"><i
+                                                        class="fa fa-fw fa-times-circle operation-del-icon"
+                                                        th:onclick="'delItem(\''+${triangle.pathId}+'\')'"></i></div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">营业执照：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="add-img" id="addImg">
+                                                <div class="rect-wechat">
+                                                    <img class="file-img" id="img1"
+                                                         th:src="${session.loginStore.businessLice}">
+                                                    <i class="fa fa-fw  fa-plus addIcon" id="icon1"></i>
+                                                    <input name="businessLice" type="file" class="up-file"
+                                                           onchange="preview(this, 1)"
+                                                           th:required="${session.loginStore.businessLice == null}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">法人代表身份证：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="add-img">
+                                                <div class="rect-wechat">
+                                                    <img class="file-img" id="img2"
+                                                         th:src="${session.loginStore.idcardUp}">
+                                                    <i class="fa fa-fw  fa-plus addIcon" id="icon2"></i>
+                                                    <input name="idcardUp" type="file" class="up-file"
+                                                           onchange="preview(this, 2)"
+                                                           th:required="${session.loginStore.idcardUp == null}">
+                                                </div>
+                                                <div class="rect-wechat">
+                                                    <img class="file-img" id="img3"
+                                                         th:src="${session.loginStore.idcardDown}">
+                                                    <i class="fa fa-fw  fa-plus addIcon" id="icon3"></i>
+                                                    <input name="idcardDown" type="file" class="up-file"
+                                                           onchange="preview(this, 3)"
+                                                           th:required="${session.loginStore.idcardDown == null}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- /.box-body -->
+                                <div class="box-footer">
+                                    <button type="submit" class="btn btn-info pull-right">提交</button>
+                                </div>
+                                <!-- /.box-footer -->
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section th:replace="store/map::map(${error},'目前支持八边形，绘画后记得保存再返回')"></section>
+    </div>
+
+
+    <!--S: 右边的小框-->
+    <!--<aside th:replace="common/template_aside::aside">-->
+
+    <!--</aside>-->
+    <!--E: 右边的小框-->
+</div>
+<!-- ./wrapper -->
+
+<!-- 小型模态框提示 -->
+<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="mySmallModalLabel">通知</h5>
+            </div>
+            <div class="modal-body">
+                <div id="modal-text"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--确认删除模态框-->
+<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="gridSystemModalLabel">提示</h5>
+            </div>
+            <div class="modal-body">
+                确定要删除吗？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deletePath()">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- jQuery 3 -->
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+
+<!-- jQuery UI 1.11.4 -->
+<script src="../../bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!-- daterangepicker -->
+<script src="../../bower_components/moment/min/moment.min.js"></script>
+<script src="../../bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- datepicker -->
+<script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- Slimscroll -->
+<script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<!--map-->
+<script src="https://webapi.amap.com/maps?v=1.4.8&key=be83ecbbef3ac88681998281da9b5380&plugin=AMap.MouseTool,AMap.PolyEditor"></script>
+<script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+<script src="../../dist/js/store/storeInfo.js"></script>
+<script th:inline="javascript">
+    var paths = [[${storeDTO.getPaths()}]];
+    var msg = [[${msg}]];
+    var error = [[${error}]];
+</script>
+<script type="text/javascript" src="../../dist/js/store/map.js"></script>
+<script src="../../dist/js/validate.js"></script>
+</body>
+</html>
